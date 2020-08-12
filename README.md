@@ -12,6 +12,7 @@ In this project, you'll apply what you've learned on data modeling with **Postgr
 ### **Database**
 
 ![ERD](database_schema.png)
+
 Star schema includes:
 * one fact table: **songplays**, and 
 * four dimension tables: **users**, **songs**, **artists** and **time**.
