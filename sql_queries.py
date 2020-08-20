@@ -9,7 +9,7 @@ time_table_drop = "DROP TABLE IF EXISTS time"
 # CREATE TABLES
 
 songplay_table_create = ("""
-CREATE TABLE songplays(
+CREATE TABLE IF NOT EXISTS songplays(
     songplay_id serial primary key,
     start_time timestamp not null,
     user_id varchar not null,
@@ -23,7 +23,7 @@ CREATE TABLE songplays(
 """)
 
 user_table_create = ("""
-CREATE TABLE users(
+CREATE TABLE IF NOT EXISTS users(
     user_id int primary key,
     first_name varchar,
     last_name varchar,
@@ -33,7 +33,7 @@ CREATE TABLE users(
 """)
 
 song_table_create = ("""
-CREATE TABLE songs(
+CREATE TABLE IF NOT EXISTS songs(
     song_id varchar primary key,
     title varchar not null,
     artist_id varchar not null,
@@ -43,7 +43,7 @@ CREATE TABLE songs(
 """)
 
 artist_table_create = ("""
-CREATE TABLE artists(
+CREATE TABLE IF NOT EXISTS artists(
     artist_id varchar primary key,
     name varchar not null,
     location varchar,
@@ -53,7 +53,7 @@ CREATE TABLE artists(
 """)
 
 time_table_create = ("""
-CREATE TABLE time(
+CREATE TABLE IF NOT EXISTS time(
     start_time timestamp primary key,
     hour int,
     day int,
@@ -80,26 +80,46 @@ VALUES(%s, %s, %s, %s, %s, %s, %s, %s)
 """)
 
 user_table_insert = ("""
-INSERT INTO users(user_id, first_name, last_name, gender, level)
+INSERT INTO users(
+    user_id,
+    first_name,
+    last_name,
+    gender,
+    level)
 VALUES(%s, %s, %s, %s, %s)
 ON CONFLICT (user_id) DO UPDATE set level = EXCLUDED.level
 """)
 
 song_table_insert = ("""
-INSERT INTO songs(song_id, title, artist_id, year, duration)
+INSERT INTO songs(
+    song_id,
+    title,
+    artist_id,
+    year,
+    duration)
 VALUES(%s, %s, %s, %s, %s)
-ON CONFLICT (song_id) DO NOTHING
 """)
 
 artist_table_insert = ("""
-INSERT INTO artists(artist_id, name, location, lattitude, longitude)
+INSERT INTO artists(
+    artist_id,
+    name,
+    location,
+    lattitude,
+    longitude)
 VALUES(%s, %s, %s, %s, %s)
-ON CONFLICT (artist_id) DO NOTHING
 """)
 
 
 time_table_insert = ("""
-INSERT INTO time(start_time, hour, day, week, month, year, weekday)
+INSERT INTO time(
+    start_time,
+    hour,
+    day,
+    week,
+    month,
+    year,
+    weekday)
 VALUES(%s, %s, %s, %s, %s, %s, %s)
 ON CONFLICT (start_time) DO NOTHING
 """)
@@ -107,24 +127,12 @@ ON CONFLICT (start_time) DO NOTHING
 # FIND SONGS
 
 song_select = ("""
-select s.song_id songid, s.artist_id artistid
-from songs s inner join artists a on s.artist_id = a.artist_id
-where s.title = %s and a.name = %s and s.duration = %s
+SELECT s.song_id songid, s.artist_id artistid
+FROM songs s INNER JOIN artists a ON s.artist_id = a.artist_id
+WHERE s.title = %s AND a.name = %s and s.duration = %s
 """)
 
 # QUERY LISTS
 
-create_table_queries = [
-    songplay_table_create,
-    user_table_create,
-    song_table_create,
-    artist_table_create,
-    time_table_create
-]
-drop_table_queries = [
-    songplay_table_drop,
-    user_table_drop,
-    song_table_drop,
-    artist_table_drop,
-    time_table_drop
-]
+create_table_queries = [songplay_table_create, user_table_create, song_table_create, artist_table_create, time_table_create]
+drop_table_queries = [songplay_table_drop, user_table_drop, song_table_drop, artist_table_drop, time_table_drop]
